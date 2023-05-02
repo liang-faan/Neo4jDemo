@@ -1,28 +1,32 @@
 package com.lfa.neo4j.data.demo.controller;
 
-import org.neo4j.driver.Driver;
-import org.neo4j.driver.Session;
-import org.springframework.http.MediaType;
+import com.lfa.neo4j.data.demo.constants.ApiPathRepo;
+import com.lfa.neo4j.data.demo.entity.MovieEntity;
+import com.lfa.neo4j.data.demo.repo.MovieRepository;
+import org.neo4j.driver.Record;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
+@RequestMapping(ApiPathRepo.MOVIES)
 public class MoviesController {
 
-    private final Driver driver;
+    @Autowired
+    private MovieRepository movieRepository;
 
-    public MoviesController(Driver driver) {
-        this.driver = driver;
+    @GetMapping
+    public List<MovieEntity> getAllMovies() {
+        return movieRepository.findAll();
     }
 
-    @GetMapping(path = "/movies", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<String> getMovieTitles() {
-
-        try (Session session = driver.session()) {
-            return session.run("MATCH (m:Movie) RETURN m ORDER BY m.name ASC")
-                    .list(r -> r.get("m").asNode().get("title").asString());
-        }
+    @GetMapping(path = "/movieByTitle")
+    public List<Record> getMovieByTitle(@RequestParam String title){
+        return movieRepository.customFindByTitle(title);
     }
+
 }
