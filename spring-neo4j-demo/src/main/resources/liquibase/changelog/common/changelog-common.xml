@@ -22,4 +22,64 @@
             CREATE (:Movie {title: 'My Life4'})
         </neo4j:cypher>
     </changeSet>
+    <changeSet id="my-neo4j-44-deployment" author="fbiville">
+        <preConditions onFail="CONTINUE">
+            <neo4j:version matches="4.4"/>
+        </preConditions>
+        <neo4j:cypher>CREATE (:Neo4j {neo4j44: true})</neo4j:cypher>
+    </changeSet>
+
+    <changeSet id="my-neo4j-non44-deployment" author="fbiville">
+        <preConditions onFail="CONTINUE">
+            <not>
+                <neo4j:version matches="4.4"/>
+            </not>
+        </preConditions>
+        <neo4j:cypher>CREATE (:Neo4j {neo4j44: false})</neo4j:cypher>
+    </changeSet>
+    <changeSet id="insert-node" author="fbiville">
+        <neo4j:insert labelName="Person">
+            <column name="id" value="8987212b-a6ff-48a1-901f-8c4b39bd6d9e" type="uuid"/>
+            <column name="age" valueNumeric="30" type="integer"/>
+            <column name="first_name" value="Florent"/>
+            <column name="last_name" value="Biville"/>
+            <column name="local_date" valueDate="2022-12-25" type="date"/>
+            <column name="local_time" valueDate="22:23:24" type="date"/>
+            <column name="local_date_time" valueDate="2018-02-01T12:13:14" type="date"/>
+            <column name="zoned_date_time" valueDate="2020-07-12T22:23:24+02:00" type="date"/>
+            <column name="polite" valueBoolean="true" type="boolean"/>
+            <column name="picture" value="DLxmEfVUC9CAmjiNyVphWw==" type="blob"/>
+            <column name="bio"
+                    value="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean nisi tellus, elementum id mi vitae, faucibus lacinia purus. Integer nec velit sit amet velit tincidunt ultrices eu eu massa. Vestibulum in libero vel neque interdum blandit in non libero. Aenean iaculis, erat ac molestie laoreet, risus ex faucibus odio, a fermentum turpis elit eget ex. Donec volutpat bibendum enim pretium pulvinar. Proin rutrum neque dui, a suscipit tellus semper suscipit. Praesent lobortis ut lorem vitae volutpat. Pellentesque a lorem eu lacus faucibus facilisis nec sed metus. Aenean lacinia luctus ultricies. Pellentesque cursus justo non iaculis tristique. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Duis tempor nisi ut turpis bibendum facilisis. Donec aliquet porttitor lacus, non rhoncus lectus laoreet et."
+                    type="clob"/>
+        </neo4j:insert>
+    </changeSet>
+    <changeSet id="customer-import" author="asanturbano">
+        <loadData
+                file="classpath:/liquibase/changelog/common/data.csv"
+                separator=";"
+                tableName="ImportPerson">
+            <column name="first_name" header="name" type="string"/>
+            <column name="wisdom_index" header="age" type="numeric"/>
+            <column name="some_date" index="2" type="date"/>
+            <column name="_" header="ignored" type="skip"/>
+            <column name="uuid" header="uuid" type="uuid"/>
+            <column name="polite" header="is_polite" type="boolean"/>
+            <column name="picture" header="blob" type="blob"/>
+        </loadData>
+    </changeSet>
+    <changeSet id="my-movie-init-555" author="fbiville">
+        <neo4j:cypher>CREATE (:Movie {title: 'My Life555', genre: 'Comedy'})</neo4j:cypher>
+    </changeSet>
+    <changeSet id="set-genre-for-movie" author="dennyliang">
+        <sql>MATCH(m:Movie) set m.genre=ID(m)</sql>
+    </changeSet>
+
+    <changeSet id="genre-extraction" author="marouane">
+        <neo4j:extractProperty property="genre" fromNodes="(m:Movie) WITH m ORDER BY id(m) ASC" nodesNamed="m">
+            <neo4j:toNodes withLabel="Genre" withProperty="genre">
+                <neo4j:linkedFromSource withType="HAS_GENRE" withDirection="OUTGOING" />
+            </neo4j:toNodes>
+        </neo4j:extractProperty>
+    </changeSet>
 </databaseChangeLog>
