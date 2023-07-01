@@ -76,7 +76,10 @@ class DemoApplicationTests {
         this.mvc.perform(get("/movies/movieByTitle")
                         .queryParam("title", "The Matrix")
                         .header("Authorization", "Bearer " + token))
-                .andDo(result -> log.info(result.getResponse().getContentAsString()))
+                .andDo(result -> {
+                    log.info(result.getResponse().getContentAsString());
+                    log.info(result);
+                })
                 .andExpect(status().is2xxSuccessful());
     }
 }

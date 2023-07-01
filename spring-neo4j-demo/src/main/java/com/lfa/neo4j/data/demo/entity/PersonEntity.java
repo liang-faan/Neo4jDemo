@@ -11,9 +11,10 @@ import org.springframework.data.neo4j.core.schema.Property;
 @Getter
 @Setter
 public class PersonEntity {
+
     @Id
-    @GeneratedValue
-    private Long id;
+    @GeneratedValue(GeneratedValue.UUIDGenerator.class)
+    private String id;
 
     @Property("born")
     private Long born;

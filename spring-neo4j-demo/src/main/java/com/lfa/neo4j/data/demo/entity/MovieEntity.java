@@ -2,11 +2,10 @@ package com.lfa.neo4j.data.demo.entity;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.neo4j.core.schema.*;
-import org.springframework.data.neo4j.core.schema.Relationship.Direction;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.data.neo4j.core.schema.GeneratedValue;
+import org.springframework.data.neo4j.core.schema.Id;
+import org.springframework.data.neo4j.core.schema.Node;
+import org.springframework.data.neo4j.core.schema.Property;
 
 @Node("Movie")
 @Getter
@@ -14,8 +13,8 @@ import java.util.List;
 public class MovieEntity {
 
     @Id
-    @GeneratedValue
-    private Long id;
+    @GeneratedValue(GeneratedValue.UUIDGenerator.class)
+    private String id;
 
     @Property("title")
     private final String title;
@@ -23,11 +22,8 @@ public class MovieEntity {
     @Property("tagline")
     private final String description;
 
-    @Relationship(type = "ACTED_IN", direction = Direction.INCOMING)
-    private List<Roles> actorsAndRoles;
-
-    @Relationship(type = "DIRECTED", direction = Direction.INCOMING)
-    private List<PersonEntity> directors = new ArrayList<>();
+    @Property("relation")
+    private Roles relation;
 
     @Property("released")
     private Long released;
@@ -37,18 +33,6 @@ public class MovieEntity {
         this.title = title;
         this.description = description;
     }
-
-    public MovieEntity withId(Long id) {
-        if (this.id.equals(id)) {
-            return this;
-        } else {
-            MovieEntity newObject = new MovieEntity(this.title, this.description);
-            newObject.id = id;
-            return newObject;
-        }
-    }
-
-    // Getters omitted for brevity
 }
 
 
