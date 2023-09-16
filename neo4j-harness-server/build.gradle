@@ -15,11 +15,24 @@ repositories {
 	mavenCentral()
 }
 
+configurations {
+	implementation {
+		exclude group: "org.slf4j", module: "slf4j-nop"
+//		exclude group: "org.slf4j", module: "slf4j-simple"
+		exclude group: "org.neo4j", module: "neo4j-slf4j-provider"
+//		exclude group: 'ch.qos.logback', module: 'logback-classic'
+	}
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	implementation 'jakarta.json:jakarta.json-api:2.1.2'
+	implementation 'org.neo4j.test:neo4j-harness:5.12.0'
+	compileOnly 'org.projectlombok:lombok:1.18.28'
+//	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'io.projectreactor:reactor-test'
+	annotationProcessor 'org.projectlombok:lombok:1.18.28'
 }
 
 tasks.named('test') {
