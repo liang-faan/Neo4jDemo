@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "@dagrejs/dagre": "^1.0.2",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-scripts": "^4.0.0",
+    "reactflow": "11.7.4"
+  },
+  "main": "/index.js"
+}
