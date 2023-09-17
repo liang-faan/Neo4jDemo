@@ -2,10 +2,10 @@ package com.lfa.neo4j.data.demo.entity;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.neo4j.core.schema.GeneratedValue;
-import org.springframework.data.neo4j.core.schema.Id;
-import org.springframework.data.neo4j.core.schema.Node;
-import org.springframework.data.neo4j.core.schema.Property;
+import org.springframework.data.neo4j.core.schema.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Node("Movie")
 @Getter
@@ -27,6 +27,12 @@ public class MovieEntity {
 
     @Property("released")
     private Long released;
+
+    @Relationship(type = "ACTED_IN", direction = Relationship.Direction.INCOMING)
+    private List<Roles> actorsAndRoles;
+
+    @Relationship(type = "DIRECTED", direction = Relationship.Direction.INCOMING)
+    private List<PersonEntity> directors = new ArrayList<>();
 
     public MovieEntity(String title, String description) {
         this.id = null;

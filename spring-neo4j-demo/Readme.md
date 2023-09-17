@@ -14,3 +14,58 @@ export TOKEN=`curl -XPOST tester:password@localhost:8080/token`
 # Test API with TOKEN
 curl -H "Authorization: Bearer $TOKEN" localhost:8080 && echo
 ```
+
+## Test Journey creation
+```shell
+curl -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -X POST 'http://localhost:8080/jobs/create' -d '{
+    "status": "A",
+    "journeys": [
+      {
+        "status": "A",
+        "journeyId": "CBG-1A",
+        "journeyName": "Test CBG",
+        "journeyDescription": "This is first journey",
+        "appGroupNodes": [
+          {
+            "index": 0,
+            "appGroupName": "Frontend",
+            "status": "A",
+            "appInstances": [
+              {
+                "status": "A",
+                "appCode": "APIGW",
+                "appName": "API Gateway",
+                "application": {
+                  "status": "A",
+                  "appCode": "API_GW",
+                  "appName": "API Gateway",
+                  "lob": "FE"
+                }
+              }
+            ]
+          },
+          {
+            "index": 1,
+            "appGroupName": "Backend",
+            "status": "A",
+            "appInstances": [
+              {
+                "status": "A",
+                "appCode": "OFT",
+                "appName": "OFT Gateway",
+                "application": {
+                  "status": "A",
+                  "appCode": "OFT",
+                  "appName": "OFT Gateway",
+                  "lob": "BE"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }'
+
+
+```

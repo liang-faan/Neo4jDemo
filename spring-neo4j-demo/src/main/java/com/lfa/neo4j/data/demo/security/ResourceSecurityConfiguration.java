@@ -37,8 +37,23 @@ public class ResourceSecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) {
         //@formatter:off
         httpSecurity.authorizeHttpRequests((authorizationManagerRequestMatcherRegistry -> authorizationManagerRequestMatcherRegistry
+                        .requestMatchers("/token",
+                                "/v3/api-docs/**",
+                                "/configuration/ui",
+                                "/swagger-resources/**",
+                                "/configuration/security",
+                                "/swagger-ui/**",
+                                "/webjars/**").permitAll()
                         .anyRequest().authenticated()))
-                .csrf(csrf -> csrf.ignoringRequestMatchers("/token"))
+                .csrf(csrf -> csrf.ignoringRequestMatchers(
+                        "/token",
+                        "/v2/api-docs",
+                        "/configuration/ui",
+                        "/swagger-resources/**",
+                        "/configuration/security",
+                        "/swagger-ui.html",
+                        "/swagger-ui/index.html",
+                        "/webjars/**"))
                 .httpBasic(Customizer.withDefaults())
                 .oauth2ResourceServer(httpSecurityOAuth2ResourceServerConfigurer ->
                         httpSecurityOAuth2ResourceServerConfigurer.jwt(Customizer.withDefaults()))
@@ -52,7 +67,7 @@ public class ResourceSecurityConfiguration {
     }
 
     @Bean
-    public UserDetailsService users(){
+    public UserDetailsService users() {
         return new InMemoryUserDetailsManager(
                 User.withUsername("tester")
                         .password("{noop}password")
@@ -62,12 +77,12 @@ public class ResourceSecurityConfiguration {
     }
 
     @Bean
-    public JwtDecoder jwtDecoder(){
+    public JwtDecoder jwtDecoder() {
         return NimbusJwtDecoder.withPublicKey((RSAPublicKey) rsaKey().getPublic()).build();
     }
 
     @Bean
-    public JwtEncoder jwtEncoder(){
+    public JwtEncoder jwtEncoder() {
         JWK jwk = new RSAKey.Builder((RSAPublicKey) rsaKey().getPublic()).privateKey(rsaKey().getPrivate()).build();
         JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
         return new NimbusJwtEncoder(jwks);

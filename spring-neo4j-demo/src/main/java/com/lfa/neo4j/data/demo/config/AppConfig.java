@@ -1,16 +1,14 @@
 package com.lfa.neo4j.data.demo.config;
 
-import com.zaxxer.hikari.HikariDataSource;
 import com.zaxxer.hikari.util.DriverDataSource;
 import liquibase.ext.neo4j.database.jdbc.Neo4jDriver;
 import liquibase.integration.spring.SpringLiquibase;
+import org.neo4j.cypherdsl.core.renderer.Dialect;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.sql.DataSource;
-import java.sql.Driver;
 import java.util.Properties;
 
 @Configuration
@@ -59,5 +57,12 @@ public class AppConfig {
         properties.setUser("neo4j");
         properties.setPassword("1234");
         return properties;
+    }
+
+    @Bean
+    public org.neo4j.cypherdsl.core.renderer.Configuration cypherDslConfiguration(){
+        return org.neo4j.cypherdsl.core.renderer.Configuration.newConfig()
+                .withDialect(Dialect.NEO4J_5)
+                .build();
     }
 }
