@@ -57,7 +57,7 @@ public class AppConfig {
         properties.setChangeLog("classpath:/liquibase/changelog/changelog-master.xml");
         properties.setUrl("jdbc:neo4j:bolt://localhost:7687");
         properties.setUser("neo4j");
-        properties.setPassword("zqYQiKqAQ8JzVdJ");
+        properties.setPassword("1234");
         return properties;
     }
 }
