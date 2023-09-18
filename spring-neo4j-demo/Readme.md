@@ -69,3 +69,123 @@ curl -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -X PO
 
 
 ```
+
+## Another complex model
+```shell
+curl -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -X POST 'http://localhost:8080/jobs/create' -d '{
+    "status": "A",
+    "version": 0,
+    "jobName": "Scan & Pay",
+    "jobDescription": "I want to pay at restaurants. ",
+    "journeys": [
+        {
+            "status": "A",
+            "version": 0,
+            "journeyId": "CBG-2A",
+            "journeyName": "Test CBG22222",
+            "journeyDescription": "This is first journey",
+            "appGroupNodes": [
+                {
+                    "status": "A",
+                    "version": 0,
+                    "index": 0,
+                    "appGroupName": "Frontend22",
+                    "appInstances": [
+                        {
+                            "status": "A",
+                            "version": 0,
+                            "appCode": "APIGW22",
+                            "appName": "API Gateway22",
+                            "application": {
+                                "status": "A",
+                                "version": 0,
+                                "appCode": "API_GW22",
+                                "appName": "API Gateway",
+                                "lob": "FE"
+                            }
+                        }
+                    ],
+                    "nextAppGroups": [
+                        {
+                            "nextAppGroup": {
+                                "status": "A",
+                                "version": 0,
+                                "index": 1,
+                                "appGroupName": "Backend22",
+                                "appInstances": [
+                                    {
+                                        "status": "A",
+                                        "version": 0,
+                                        "appCode": "OFT22",
+                                        "appName": "OFT Gateway",
+                                        "application": {
+                                            "status": "A",
+                                            "version": 0,
+                                            "appCode": "OFT22",
+                                            "appName": "OFT22 Gateway",
+                                            "lob": "BE22"
+                                        }
+                                    }
+                                ],
+                                "nextAppGroups": [
+                                    {
+                                        "nextAppGroup": {
+                                            "status": "A",
+                                            "version": 0,
+                                            "index": 0,
+                                            "appGroupName": "Frontend22"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "status": "A",
+                    "version": 0,
+                    "index": 1,
+                    "appGroupName": "Backend22",
+                    "appInstances": [
+                        {
+                            "status": "A",
+                            "version": 0,
+                            "appCode": "OFT22",
+                            "appName": "OFT Gateway",
+                            "application": {
+                                "status": "A",
+                                "version": 0,
+                                "appCode": "OFT22",
+                                "appName": "OFT22 Gateway",
+                                "lob": "BE22"
+                            }
+                        }
+                    ],
+                    "nextAppGroups": []
+                },
+                {
+                    "status": "A",
+                    "version": 0,
+                    "index": 2,
+                    "appGroupName": "Backend33",
+                    "appInstances": [
+                        {
+                            "status": "A",
+                            "version": 0,
+                            "appCode": "OFT22",
+                            "appName": "OFT Gateway",
+                            "application": {
+                                "status": "A",
+                                "version": 0,
+                                "appCode": "OFT22",
+                                "appName": "OFT22 Gateway",
+                                "lob": "BE22"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}'
+```
