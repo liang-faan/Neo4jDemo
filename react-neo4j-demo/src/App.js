@@ -20,7 +20,7 @@ const nodeHeight = 36;
 
 const getLayoutedElements = (nodes, edges, direction = 'TB') => {
   const isHorizontal = direction === 'LR';
-  dagreGraph.setGraph({ rankdir: direction });
+  dagreGraph.setGraph({ rankdir: direction, minlen: 3 });
 
   nodes.forEach((node) => {
     dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
@@ -64,7 +64,7 @@ const LayoutFlow = () => {
       setEdges((eds) =>
         addEdge({ ...params, type: ConnectionLineType.SmoothStep, animated: true }, eds)
       ),
-    []
+    [setEdges]
   );
   const onLayout = useCallback(
     (direction) => {
@@ -77,7 +77,7 @@ const LayoutFlow = () => {
       setNodes([...layoutedNodes]);
       setEdges([...layoutedEdges]);
     },
-    [nodes, edges]
+    [nodes, edges,setNodes,setEdges]
   );
 
   return (
