@@ -10,8 +10,9 @@ import "reactflow/dist/style.css";
 
 const nodeWidth = 100;
 const nodeRank = 30;
-const nodeHeight = 40;
-const swimlaneHeight = 75;
+const nodeHeight = 45;
+const swimlaneHeight = 110;
+const swimlaneRank = 5;
 const edgeType = ConnectionLineType.Bezier;
 
 const processSwimlaneNodes = (inputData) => {
@@ -39,10 +40,13 @@ const processSwimlaneNodes = (inputData) => {
         y: swimlaneHeight * index,
       },
       style: {
-        height: swimlaneHeight - 5,
+        height: swimlaneHeight-swimlaneRank,
         width: maxLength,
         zIndex: -1,
         background: "grey",
+        textAlign: "left",
+        color: "#16fae7",
+        fontWeight: 600
       },
     });
   });
