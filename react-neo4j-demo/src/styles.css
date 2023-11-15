@@ -6,4 +6,12 @@ html, body, #root {
   padding: 0;
   box-sizing: border-box;
   font-family: sans-serif;
+  background-color: #556677;
+}
+
+
+.react-flow__node-custom {
+  padding: 10px;
+  background-color: #556677;
+  color: white;
 }

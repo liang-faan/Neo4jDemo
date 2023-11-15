@@ -8,17 +8,17 @@ import ReactFlow, {
 } from 'reactflow';
 import dagre from '@dagrejs/dagre';
 
-import { initialNodes, initialEdges } from './nodes-edges.js';
+import { initialNodes, initialEdges, swimlaneNodes } from './nodes-edges.js';
 
 import 'reactflow/dist/style.css';
 
-const dagreGraph = new dagre.graphlib.Graph();
+const dagreGraph = new dagre.graphlib.Graph({ compound: true });
 dagreGraph.setDefaultEdgeLabel(() => ({}));
 
 const nodeWidth = 172;
 const nodeHeight = 36;
 
-const getLayoutedElements = (nodes, edges, direction = 'TB') => {
+const getLayoutedElements = (nodes, edges, swimlannes, direction = 'TB') => {
   const isHorizontal = direction === 'LR';
   dagreGraph.setGraph({ rankdir: direction, minlen: 3 });
 
@@ -30,7 +30,13 @@ const getLayoutedElements = (nodes, edges, direction = 'TB') => {
     dagreGraph.setEdge(edge.source, edge.target);
   });
 
+  // dagreGraph.setParent("1", "A");
+  // dagreGraph.setParent("2", "A");
+  // dagreGraph.setParent("3", "A");
+
   dagre.layout(dagreGraph);
+
+  console.log(dagreGraph);
 
   nodes.forEach((node) => {
     const nodeWithPosition = dagreGraph.node(node.id);
@@ -47,12 +53,28 @@ const getLayoutedElements = (nodes, edges, direction = 'TB') => {
     return node;
   });
 
-  return { nodes, edges };
+  swimlannes.forEach((swm, index)=>{
+    swm.position ={
+      x: 0,
+      y: index * nodeHeight*2
+    };
+    swm.style = {
+      height: nodeHeight *2-5,
+      width: "100%",
+      zIndex: -1,
+      background: "grey"
+    }
+  });
+
+  const allNodes = nodes.concat(swimlaneNodes);
+  console.warn(edges)
+  return { nodes: allNodes, edges };
 };
 
 const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
   initialNodes,
-  initialEdges
+  initialEdges, 
+  swimlaneNodes
 );
 
 const LayoutFlow = () => {
@@ -71,14 +93,17 @@ const LayoutFlow = () => {
       const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
         nodes,
         edges,
+        swimlaneNodes,
         direction
       );
 
       setNodes([...layoutedNodes]);
       setEdges([...layoutedEdges]);
     },
-    [nodes, edges,setNodes,setEdges]
+    [nodes, edges, setNodes, setEdges]
   );
+
+  console.warn(edges);
 
   return (
     <ReactFlow
@@ -87,7 +112,7 @@ const LayoutFlow = () => {
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
       onConnect={onConnect}
-      connectionLineType={ConnectionLineType.SmoothStep}
+      connectionLineType={ConnectionLineType.Bezier}
       fitView
     >
       <Panel position="top-right">
