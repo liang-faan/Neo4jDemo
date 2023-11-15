@@ -108,5 +108,8 @@ export const SWIMLANE_GROUP_NODES = [
 ];
 ```
 
-## Algorithm Output
-![result](./result.png)
+## Algorithm Output Sample 1
+![result](./sample1.png)
+
+## Algorithm Output Sample 2
+![result](./sample2.png)
