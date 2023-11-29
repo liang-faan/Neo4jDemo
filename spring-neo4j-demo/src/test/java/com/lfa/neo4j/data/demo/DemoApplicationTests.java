@@ -1,6 +1,5 @@
 package com.lfa.neo4j.data.demo;
 
-import com.lfa.neo4j.data.demo.controller.MoviesController;
 import com.lfa.neo4j.data.demo.controller.TokenController;
 import com.lfa.neo4j.data.demo.security.ResourceSecurityConfiguration;
 import lombok.extern.log4j.Log4j2;
