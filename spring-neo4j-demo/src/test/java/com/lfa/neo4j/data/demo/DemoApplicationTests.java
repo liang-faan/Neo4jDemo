@@ -17,11 +17,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * Tests for {@link MoviesController}
+ * Tests for {@link}
  *
  * @author Josh Cummings
  */
-@WebMvcTest({MoviesController.class, TokenController.class})
+@WebMvcTest({TokenController.class})
 @Import(ResourceSecurityConfiguration.class)
 @AutoConfigureDataNeo4j
 @Log4j2

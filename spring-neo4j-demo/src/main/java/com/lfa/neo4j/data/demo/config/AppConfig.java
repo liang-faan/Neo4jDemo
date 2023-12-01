@@ -5,18 +5,22 @@ import liquibase.ext.neo4j.database.jdbc.Neo4jDriver;
 import liquibase.integration.spring.SpringLiquibase;
 import org.neo4j.cypherdsl.core.renderer.Dialect;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.neo4j.config.EnableNeo4jAuditing;
 
 import javax.sql.DataSource;
 import java.util.Properties;
 
 @Configuration
+@EnableNeo4jAuditing(dateTimeProviderRef = "offsetDatetimeProvider", auditorAwareRef = "springSecurityAuditorAware")
 public class AppConfig {
+
     @Bean
     public synchronized SpringLiquibase liquibase() {
         SpringLiquibase liquibase = new SpringLiquibase();
-        liquibase.setDataSource(dataSource());
+        liquibase.setDataSource(getLiquibaseDatasource());
         liquibase.setChangeLog(liquibaseProperties().getChangeLog());
         liquibase.setClearCheckSums(liquibaseProperties().isClearChecksums());
         liquibase.setContexts(liquibaseProperties().getContexts());
@@ -35,13 +39,7 @@ public class AppConfig {
         return liquibase;
     }
 
-//    @Bean
-    private synchronized DataSource dataSource() {
-//        DataSourceBuilder<DriverDataSource> hikariDataSource = DataSourceBuilder.create().type(DriverDataSource.class);
-//        hikariDataSource.driverClassName(Neo4jDriver.class.getName());
-//        hikariDataSource.url(liquibaseProperties().getUrl());
-//        hikariDataSource.username(liquibaseProperties().getUser());
-//        hikariDataSource.password(liquibaseProperties().getPassword());
+    private synchronized DataSource getLiquibaseDatasource() {
         return new DriverDataSource(
                 liquibaseProperties().getUrl(),
                 Neo4jDriver.class.getName(),
@@ -50,19 +48,26 @@ public class AppConfig {
                 liquibaseProperties().getPassword());
     }
 
-    private LiquibaseProperties liquibaseProperties(){
-        LiquibaseProperties properties = new LiquibaseProperties();
-        properties.setChangeLog("classpath:/liquibase/changelog/changelog-master.xml");
-        properties.setUrl("jdbc:neo4j:bolt://localhost:7687");
-        properties.setUser("neo4j");
-        properties.setPassword("1234");
-        return properties;
+    @Bean
+    @ConfigurationProperties(prefix = "spring.liquibase")
+    public LiquibaseProperties liquibaseProperties() {
+        return new LiquibaseProperties();
     }
 
     @Bean
-    public org.neo4j.cypherdsl.core.renderer.Configuration cypherDslConfiguration(){
+    public org.neo4j.cypherdsl.core.renderer.Configuration cypherDslConfiguration() {
         return org.neo4j.cypherdsl.core.renderer.Configuration.newConfig()
                 .withDialect(Dialect.NEO4J_5)
                 .build();
+    }
+
+    @Bean("offsetDatetimeProvider")
+    public OffsetDatetimeProvider offsetDatetimeProvider() {
+        return new OffsetDatetimeProvider();
+    }
+
+    @Bean
+    public SpringSecurityAuditorAware springSecurityAuditorAware() {
+        return new SpringSecurityAuditorAware();
     }
 }
