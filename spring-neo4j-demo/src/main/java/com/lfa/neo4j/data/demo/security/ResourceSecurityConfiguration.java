@@ -39,6 +39,7 @@ public class ResourceSecurityConfiguration {
         httpSecurity.authorizeHttpRequests((authorizationManagerRequestMatcherRegistry -> authorizationManagerRequestMatcherRegistry
                         .requestMatchers("/token",
                                 "/v3/api-docs/**",
+                                "/actuator/**",
                                 "/configuration/ui",
                                 "/swagger-resources/**",
                                 "/configuration/security",
